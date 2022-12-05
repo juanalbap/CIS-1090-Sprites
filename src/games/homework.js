@@ -22,19 +22,23 @@ function setup(sprites) {
     //Sprite "Images" are just characters,
     //But you can use emojis!
     // https://emojis.wiki/
-
-    sprites[0].image = "🚒"; //A fire engine
+    sprites[0].image = "🚶"; //A fire engine
     sprites[0].x = 100;
     sprites[0].y = 100;
+    sprites[1].image = "🔫"; //how do I resize?
+    sprites[1].
+    sprites[1].x = sprites[0].x + 1;
+    sprites[1].y = 100;
+   
 
     //Putting two sprites together you
     //can make more complicated things.
-    sprites[1].image = "🏠"; //A fire engine
+   /* sprites[1].image = "🏠"; //A fire engine
     sprites[1].x = 300;
     sprites[1].y = 100;
     sprites[2].image = "🔥"; //A fire engine
     sprites[2].x = 300;
-    sprites[2].y = 120;
+    sprites[2].y = 120;*/
 
 }
 
@@ -53,10 +57,11 @@ function setup(sprites) {
 function frame(sprites, t, dt, up, down, left, right, space) {
     //Keep references to the sprites in some variables with
     //better names:
-    const truck = sprites[0]; //Easier to remember
-    const house = sprites[1]; //Easier to remember
+    const hero = sprites[0]; //Easier to remember
+    const weapon = sprites[1]; //Easier to remember
     const fire = sprites[2]; //Easier to remember
 
+    sprites[1].x = sprites[0].x + 5;
     //Move the fire engine
     if (up) {
         //Speed is in pixels per second, and
@@ -66,29 +71,31 @@ function frame(sprites, t, dt, up, down, left, right, space) {
         //Multiply them together so that the
         //truck moves at the same speed if the
         //computer is fast or slow
-        truck.y += speed * dt;
+        hero.y += speed * dt;
     } 
     if (down) {
-        truck.y -= speed * dt;
+        hero.y -= speed * dt;
     }
     if (right) {
-        truck.x += speed * dt;
+        hero.x += speed * dt;
         //You can flipH a spright so it is facing
         //the other direction
-        truck.flipH = true;
+        hero.flipH = true;
+        weapon.flipH = true;
     }
     if (left) {
-        truck.x -= speed * dt;
-        truck.flipH = false;
+        hero.x -= speed * dt;
+        hero.flipH = false;
+        weapon.flipH = false;
     }
 
     //If the truck is close to the house
-    if ( distance(truck, house) < 10 ){
-        fire.image = ""; //Make the fire go away
-    }
+   // if ( distance(truck, house) < 10 ){
+     //   fire.image = ""; //Make the fire go away
+    //}
 
     //A very simple repeating animation
-    sprites[2].y += Math.sin(t)/10;
+    //sprites[2].y += Math.sin(t)/10;
 
     return score;
 };
