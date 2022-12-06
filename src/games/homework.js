@@ -1,10 +1,15 @@
 //You might have some game state so you can keep track of
 //what is happening:
-let score;  //The players score
-let alive;  //is the 
+let score;
+let alive;
+let action;
+let heroHealth = 100;
+let zombieHealth = 100;
 
 //You might have some constants that you use
-const speed = 300;  //In pixels per second
+const speed = 100;  //In pixels per second
+const gunBulletSpeed = 300;
+const zombieSpeed = 85;
 
 //This is a helper function to compute the distance
 //between two sprites
@@ -19,26 +24,23 @@ function setup(sprites) {
     score = 0;      //set score to zero
     alive = true;   //Set player to alive
 
-    //Sprite "Images" are just characters,
-    //But you can use emojis!
-    // https://emojis.wiki/
-    sprites[0].image = "🚶"; //A fire engine
-    sprites[0].x = 100;
-    sprites[0].y = 100;
-    sprites[1].image = "🔫"; //how do I resize?
-    sprites[1].
-    sprites[1].x = sprites[0].x + 1;
-    sprites[1].y = 100;
-   
 
-    //Putting two sprites together you
-    //can make more complicated things.
-   /* sprites[1].image = "🏠"; //A fire engine
-    sprites[1].x = 300;
+    sprites[0].image = "🚶"; //Hero
+    sprites[0].x = 120;
+    sprites[0].y = 100;
+    sprites[2].image = "."; //Bullet; How do I resize? Change color?
+    sprites[2].x = sprites[1].x + 5;
+    sprites[2].x = sprites[1].y;
+    sprites[1].image = "🔫"; //Handgun: How do I resize? ❗❗
+    sprites[1].color = "#000000"
+    sprites[1].x = sprites[0].x;
     sprites[1].y = 100;
-    sprites[2].image = "🔥"; //A fire engine
-    sprites[2].x = 300;
-    sprites[2].y = 120;*/
+
+    sprites[3].image = "🧟"; //Zombie. How do I make many? ❗❗
+    sprites[0].x = 300;
+    sprites[0].y = 120;
+
+
 
 }
 
@@ -55,58 +57,87 @@ function setup(sprites) {
  * @returns The current score
  */
 function frame(sprites, t, dt, up, down, left, right, space) {
-    //Keep references to the sprites in some variables with
-    //better names:
-    const hero = sprites[0]; //Easier to remember
-    const weapon = sprites[1]; //Easier to remember
-    const fire = sprites[2]; //Easier to remember
 
-    sprites[1].x = sprites[0].x + 5;
-    //Move the fire engine
+    const hero = sprites[0];
+    const gun = sprites[1];
+    const gunBullet = sprites[2];
+    const zombie = sprites[3];
+
+    sprites[1].x = sprites[0].x + 5; //Set gun next to hero at all times
+    sprites[2].x = sprites[1].x + 3; //Set bullet next to gun at all times
+
+    //Movement mechanisms
     if (up) {
         //Speed is in pixels per second, and
         //dt is the number of seconds that have
         //passed since the last frame.
-        //
+
         //Multiply them together so that the
         //truck moves at the same speed if the
         //computer is fast or slow
         hero.y += speed * dt;
-    } 
+    }
     if (down) {
-        hero.y -= speed * dt;
+        action = true;
     }
     if (right) {
         hero.x += speed * dt;
-        //You can flipH a spright so it is facing
-        //the other direction
         hero.flipH = true;
-        weapon.flipH = true;
+        gun.flipH = true;
     }
     if (left) {
         hero.x -= speed * dt;
         hero.flipH = false;
-        weapon.flipH = false;
+        gun.flipH = false;
     }
 
-    //If the truck is close to the house
-   // if ( distance(truck, house) < 10 ){
-     //   fire.image = ""; //Make the fire go away
-    //}
+    //Shooting mechanisms
+    if (space && gunBullet.x == gun.x + 5) {
+        gunBullet.x += gunBulletSpeed * dt;
+        //Rotate gun a bit and make it go back to simulate recoil; ❗❗
+        gun.x -= 2;
+        gun.x += 2;
+        //Add a little fire effect on the barrel? ❗❗
+    }
 
-    //A very simple repeating animation
-    //sprites[2].y += Math.sin(t)/10;
+    if (gunBullet.x == zombie.x) {
+        zombieHealth -= 25;
+        gunBullet.x = gun.x + 5;
+    }
+
+    //Zombie mechanisms
+    if (hero.x < zombie.x) {
+        zombie.x -= zombieSpeed * dt;
+    }
+    if (hero.x > zombie.x) {
+        zombie.x += zombieSpeed * dt;
+    }
+    if (hero.x == zombie.x) {
+        heroHealth -= 30;
+    }
+    
+
 
     return score;
 };
 
+if (zombieHealth <= 0) { //❗❗
+    zombie.image = "🪦";
+    setTimeout(() => { zombie.image = ""; }, 3000);
+}
+
+if(heroHealth <= 0){ //❗❗
+    alive = false;
+}
+
 export default {
-    name: "Homework",
-    instructions: "Write your instructions here",
-    icon: "📝", //Choose an emoji icon
+    name: "Zombie Frenzy",
+    instructions: "Arrows to move, Spacebar to shoot, Down arrow to pick up loot.",
+    icon: "🧟", //Choose an emoji icon
     background: {
-        //You can put CSS here to change your background
-        "background-color": "#555"
+        "background-color": "white",
+        "background-image": "linear-gradient(#424299, skyblue)",
+        "border-bottom": "120px solid green"
     },
     frame,
     setup,
