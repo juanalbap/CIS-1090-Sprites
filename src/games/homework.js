@@ -9,7 +9,7 @@ let zombieHealth = 100;
 //You might have some constants that you use
 const speed = 100;  //In pixels per second
 const gunBulletSpeed = 300;
-const zombieSpeed = 85;
+const zombieSpeed = 0;
 
 //This is a helper function to compute the distance
 //between two sprites
@@ -27,18 +27,20 @@ function setup(sprites) {
 
     sprites[0].image = "🚶"; //Hero
     sprites[0].x = 120;
-    sprites[0].y = 100;
-    sprites[2].image = "."; //Bullet; How do I resize? Change color?
-    sprites[2].x = sprites[1].x + 5;
-    sprites[2].x = sprites[1].y;
+    sprites[0].y = -5;
+    
     sprites[1].image = "🔫"; //Handgun: How do I resize? ❗❗
     sprites[1].color = "#000000"
     sprites[1].x = sprites[0].x;
-    sprites[1].y = 100;
+    sprites[1].y = sprites[0].y;
+
+    sprites[2].image = "."; //Bullet; How do I resize? Change color?
+    sprites[2].x = sprites[1].x + 5;
+    sprites[2].y = sprites[1].y + 17;
 
     sprites[3].image = "🧟"; //Zombie. How do I make many? ❗❗
-    sprites[0].x = 300;
-    sprites[0].y = 120;
+    sprites[3].x = 700;
+    sprites[3].y = -5;
 
 
 
@@ -63,9 +65,12 @@ function frame(sprites, t, dt, up, down, left, right, space) {
     const gunBullet = sprites[2];
     const zombie = sprites[3];
 
-    sprites[1].x = sprites[0].x + 5; //Set gun next to hero at all times
-    sprites[2].x = sprites[1].x + 3; //Set bullet next to gun at all times
+    //sprites[1].x = sprites[0].x + 5; //Set gun next to hero at all times
+    //sprites[2].x = sprites[1].x + 3; //Set bullet next to gun at all times
 
+    //gun.x = hero.x - 28;
+    //gun.y = hero.y + 5;
+    
     //Movement mechanisms
     if (up) {
         //Speed is in pixels per second, and
@@ -75,7 +80,7 @@ function frame(sprites, t, dt, up, down, left, right, space) {
         //Multiply them together so that the
         //truck moves at the same speed if the
         //computer is fast or slow
-        hero.y += speed * dt;
+       // hero.y += speed * dt;
     }
     if (down) {
         action = true;
@@ -84,6 +89,7 @@ function frame(sprites, t, dt, up, down, left, right, space) {
         hero.x += speed * dt;
         hero.flipH = true;
         gun.flipH = true;
+        gun.x += 56;
     }
     if (left) {
         hero.x -= speed * dt;
