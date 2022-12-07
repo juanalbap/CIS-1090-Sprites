@@ -71,7 +71,7 @@ function frame(sprites, t, dt, up, down, left, right, space) {
     //gun.x = hero.x - 28;
     //gun.y = hero.y + 5;
     
-    //Movement mechanisms
+    //Movement mechanismsg
     if (up) {
         //Speed is in pixels per second, and
         //dt is the number of seconds that have
