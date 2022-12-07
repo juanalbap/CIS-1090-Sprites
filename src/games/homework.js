@@ -5,6 +5,7 @@ let alive;
 let action;
 let heroHealth = 100;
 let zombieHealth = 100;
+let facingRight = true;
 
 //You might have some constants that you use
 const speed = 100;  //In pixels per second
@@ -26,16 +27,17 @@ function setup(sprites) {
 
 
     sprites[0].image = "🚶"; //Hero
+    sprites[0].flipH = true;
     sprites[0].x = 120;
     sprites[0].y = -5;
     
     sprites[1].image = "🔫"; //Handgun: How do I resize? ❗❗
-    sprites[1].color = "#000000"
-    sprites[1].x = sprites[0].x;
+    sprites[1].flipH = true;
+    sprites[1].x = sprites[0].x + 28;
     sprites[1].y = sprites[0].y;
 
-    sprites[2].image = "."; //Bullet; How do I resize? Change color?
-    sprites[2].x = sprites[1].x + 5;
+    sprites[2].image = ""; //Bullet; How do I resize? Change color?
+    sprites[2].x = sprites[1].x;
     sprites[2].y = sprites[1].y + 17;
 
     sprites[3].image = "🧟"; //Zombie. How do I make many? ❗❗
@@ -86,25 +88,48 @@ function frame(sprites, t, dt, up, down, left, right, space) {
         action = true;
     }
     if (right) {
+
+        facingRight = true;
         hero.x += speed * dt;
         hero.flipH = true;
         gun.flipH = true;
-        gun.x += 56;
+        gun.x = hero.x + 28;
+        
     }
     if (left) {
+
+        facingRight = false;
         hero.x -= speed * dt;
         hero.flipH = false;
         gun.flipH = false;
+        gun.x = hero.x - 50;
+        
     }
 
     //Shooting mechanisms
-    if (space && gunBullet.x == gun.x + 5) {
-        gunBullet.x += gunBulletSpeed * dt;
+    if (space) {
+
+        if (facingRight == true){
+            gunBullet.x = gun.x + 46;
+        } else {
+            gunBullet.x = gun.x + 9;
+        }
+
+        gunBullet.image = ".";
+        
         //Rotate gun a bit and make it go back to simulate recoil; ❗❗
         gun.x -= 2;
         gun.x += 2;
         //Add a little fire effect on the barrel? ❗❗
+        
     }
+
+    if (facingRight == true){
+        gunBullet.x += gunBulletSpeed * dt;
+    } else {
+        gunBullet.x -= gunBulletSpeed * dt;
+    }
+    
 
     if (gunBullet.x == zombie.x) {
         zombieHealth -= 25;
