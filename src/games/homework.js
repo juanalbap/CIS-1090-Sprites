@@ -7,10 +7,12 @@ let heroHealth = 100;
 let zombieHealth = 100;
 let facingRight = true;
 let fired = false;
+let bulletReady;
+
 
 //You might have some constants that you use
 const speed = 100;  //In pixels per second
-const gunBulletSpeed = 300;
+let gunBulletSpeed = 300;
 const zombieSpeed = 0;
 
 //This is a helper function to compute the distance
@@ -31,7 +33,7 @@ function setup(sprites) {
     sprites[0].flipH = true;
     sprites[0].x = 120;
     sprites[0].y = -5;
-    
+
     sprites[1].image = "🔫"; //Handgun: How do I resize? ❗❗
     sprites[1].flipH = true;
     sprites[1].x = sprites[0].x + 28;
@@ -44,6 +46,8 @@ function setup(sprites) {
     sprites[3].image = "🧟"; //Zombie. How do I make many? ❗❗
     sprites[3].x = 700;
     sprites[3].y = -5;
+
+    bulletReady = true;
 
 
 
@@ -73,7 +77,7 @@ function frame(sprites, t, dt, up, down, left, right, space) {
 
     //gun.x = hero.x - 28;
     //gun.y = hero.y + 5;
-    
+
     //Movement mechanismsg
     if (up) {
         //Speed is in pixels per second, and
@@ -83,7 +87,7 @@ function frame(sprites, t, dt, up, down, left, right, space) {
         //Multiply them together so that the
         //truck moves at the same speed if the
         //computer is fast or slow
-       // hero.y += speed * dt;
+        // hero.y += speed * dt;
     }
     if (down) {
         action = true;
@@ -95,9 +99,9 @@ function frame(sprites, t, dt, up, down, left, right, space) {
         hero.flipH = true;
         gun.flipH = true;
         gun.x = hero.x + 28;
-        
+
     }
-    
+
     if (left) {
 
         facingRight = false;
@@ -105,37 +109,59 @@ function frame(sprites, t, dt, up, down, left, right, space) {
         hero.flipH = false;
         gun.flipH = false;
         gun.x = hero.x - 50;
-        
+
     }
 
     //Shooting mechanisms
-    if (space) {
+    if (space && bulletReady == true) {
 
-        fired = true;
+        //fired = true;
 
-        if (facingRight == true){
+        if (facingRight == true) {
             gunBullet.x = gun.x + 46;
         } else {
             gunBullet.x = gun.x + 9;
         }
 
         gunBullet.image = ".";
-        
+
         //Rotate gun a bit and make it go back to simulate recoil; ❗❗
         gun.x -= 2;
+        //add delay
         gun.x += 2;
         //Add a little fire effect on the barrel? ❗❗
-        
+        if (facingRight == true) {
+            gunBulletSpeed = 200;
+        } else if (facingRight == false) {
+            gunBulletSpeed = -200;
+        }
+        bulletReady = false;
+
     }
 
-    if (facingRight == true){
+    //add recoil variable
+
+    if (gunBulletSpeed != 0) {
+    
+        gunBullet.x += dt * gunBulletSpeed;
+
+        //And stop it when it goes off screen
+        if (gunBullet.x < 0 || gunBullet.x > 400){
+            gunBullet.image = "";
+            gunBulletSpeed = 0;
+            bulletReady == true;
+        }
+
+    }
+
+    /*if (facingRight == true && fired == true){
         while((gunBullet.x != zombie.x || gunBullet.x != 500) && fired == true ){
             gunBullet.x += gunBulletSpeed * dt;
         } 
 
         fired = false;
         gunBullet.image = "";
-    } else {
+    } else if (facingRight == false && fired == true){
         while((gunBullet.x != zombie.x || gunBullet.x != -100) && fired == true ){
             gunBullet.x -= gunBulletSpeed * dt;
         } 
@@ -143,8 +169,8 @@ function frame(sprites, t, dt, up, down, left, right, space) {
         fired = false;
         gunBullet.image = "";
         
-    }
-    
+    }*/
+
 
     if (gunBullet.x == zombie.x) {
         zombieHealth -= 25;
@@ -161,7 +187,7 @@ function frame(sprites, t, dt, up, down, left, right, space) {
     if (hero.x == zombie.x) {
         heroHealth -= 30;
     }
-    
+
 
 
     return score;
@@ -172,7 +198,7 @@ if (zombieHealth <= 0) { //❗❗
     setTimeout(() => { zombie.image = ""; }, 3000);
 }
 
-if(heroHealth <= 0){ //❗❗
+if (heroHealth <= 0) { //❗❗
     alive = false;
 }
 
