@@ -6,6 +6,7 @@ let action;
 let heroHealth = 100;
 let zombieHealth = 100;
 let facingRight = true;
+let fired = false;
 
 //You might have some constants that you use
 const speed = 100;  //In pixels per second
@@ -96,6 +97,7 @@ function frame(sprites, t, dt, up, down, left, right, space) {
         gun.x = hero.x + 28;
         
     }
+    
     if (left) {
 
         facingRight = false;
@@ -108,6 +110,8 @@ function frame(sprites, t, dt, up, down, left, right, space) {
 
     //Shooting mechanisms
     if (space) {
+
+        fired = true;
 
         if (facingRight == true){
             gunBullet.x = gun.x + 46;
@@ -125,9 +129,20 @@ function frame(sprites, t, dt, up, down, left, right, space) {
     }
 
     if (facingRight == true){
-        gunBullet.x += gunBulletSpeed * dt;
+        while((gunBullet.x != zombie.x || gunBullet.x != 500) && fired == true ){
+            gunBullet.x += gunBulletSpeed * dt;
+        } 
+
+        fired = false;
+        gunBullet.image = "";
     } else {
-        gunBullet.x -= gunBulletSpeed * dt;
+        while((gunBullet.x != zombie.x || gunBullet.x != -100) && fired == true ){
+            gunBullet.x -= gunBulletSpeed * dt;
+        } 
+
+        fired = false;
+        gunBullet.image = "";
+        
     }
     
 
