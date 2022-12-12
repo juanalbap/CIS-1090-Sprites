@@ -13,7 +13,7 @@ let bulletReady;
 //You might have some constants that you use
 const speed = 100;  //In pixels per second
 let gunBulletSpeed = 300;
-const zombieSpeed = 0;
+const zombieSpeed = 10;
 
 //This is a helper function to compute the distance
 //between two sprites
@@ -141,12 +141,20 @@ function frame(sprites, t, dt, up, down, left, right, space) {
         bulletReady == true;
 
         //And stop it when it goes off screen
-        if (gunBullet.x < 0 || gunBullet.x > 500){
-            //gunBullet.image = "";
+        if (gunBullet.x < -5 || gunBullet.x > 790){
+            gunBullet.image = "";
             bulletReady == true;
             gunBulletSpeed = 0;
             
         }
+
+        if (gunBullet.x == zombie.x) {
+            gunBullet.image = "";
+            zombieHealth -= 25;
+            bulletReady == true;
+            gunBulletSpeed = 0;
+        }
+
 
     }
 
@@ -168,11 +176,6 @@ function frame(sprites, t, dt, up, down, left, right, space) {
     }*/
 
 
-    if (gunBullet.x == zombie.x) {
-        zombieHealth -= 25;
-        gunBullet.x = gun.x + 5;
-    }
-
     //Zombie mechanisms
     if (hero.x < zombie.x) {
         zombie.x -= zombieSpeed * dt;
@@ -184,19 +187,22 @@ function frame(sprites, t, dt, up, down, left, right, space) {
         heroHealth -= 30;
     }
 
+    if (zombieHealth <= 0) { //❗❗
+        zombie.image = "🪦";
+        setTimeout(() => { zombie.image = ""; }, 3000);
+    }
+
+    if (heroHealth <= 0) { //❗❗
+        alive = false;
+    }
 
 
     return score;
 };
 
-if (zombieHealth <= 0) { //❗❗
-    zombie.image = "🪦";
-    setTimeout(() => { zombie.image = ""; }, 3000);
-}
 
-if (heroHealth <= 0) { //❗❗
-    alive = false;
-}
+
+
 
 export default {
     name: "Zombie Frenzy",
