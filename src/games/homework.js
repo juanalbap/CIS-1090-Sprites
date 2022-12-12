@@ -72,13 +72,7 @@ function frame(sprites, t, dt, up, down, left, right, space) {
     const gunBullet = sprites[2];
     const zombie = sprites[3];
 
-    //sprites[1].x = sprites[0].x + 5; //Set gun next to hero at all times
-    //sprites[2].x = sprites[1].x + 3; //Set bullet next to gun at all times
-
-    //gun.x = hero.x - 28;
-    //gun.y = hero.y + 5;
-
-    //Movement mechanismsg
+    //Movement mechanisms
     if (up) {
         //Speed is in pixels per second, and
         //dt is the number of seconds that have
@@ -115,8 +109,6 @@ function frame(sprites, t, dt, up, down, left, right, space) {
     //Shooting mechanisms
     if (space && bulletReady == true) {
 
-        //fired = true;
-
         if (facingRight == true) {
             gunBullet.x = gun.x + 46;
         } else {
@@ -132,10 +124,12 @@ function frame(sprites, t, dt, up, down, left, right, space) {
         //Add a little fire effect on the barrel? ❗❗
         if (facingRight == true) {
             gunBulletSpeed = 200;
+            bulletReady = false;
         } else if (facingRight == false) {
             gunBulletSpeed = -200;
+            bulletReady = false;
         }
-        bulletReady = false;
+        
 
     }
 
@@ -144,12 +138,14 @@ function frame(sprites, t, dt, up, down, left, right, space) {
     if (gunBulletSpeed != 0) {
     
         gunBullet.x += dt * gunBulletSpeed;
+        bulletReady == true;
 
         //And stop it when it goes off screen
-        if (gunBullet.x < 0 || gunBullet.x > 400){
-            gunBullet.image = "";
-            gunBulletSpeed = 0;
+        if (gunBullet.x < 0 || gunBullet.x > 500){
+            //gunBullet.image = "";
             bulletReady == true;
+            gunBulletSpeed = 0;
+            
         }
 
     }
