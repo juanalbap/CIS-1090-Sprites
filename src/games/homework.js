@@ -143,38 +143,21 @@ function frame(sprites, t, dt, up, down, left, right, space) {
         //And stop it when it goes off screen
         if (gunBullet.x < -5 || gunBullet.x > 790){
             gunBullet.image = "";
-            bulletReady == true;
+            bulletReady = true;
             gunBulletSpeed = 0;
             
         }
 
-        if (gunBullet.x == zombie.x) {
+        if (gunBullet.x <= zombie.x + 10 && gunBullet.x >= zombie.x + 10) {
             gunBullet.image = "";
-            zombieHealth -= 25;
-            bulletReady == true;
+            zombieHealth -= 100;
+            bulletReady = true;
             gunBulletSpeed = 0;
+            score++;
         }
 
 
     }
-
-    /*if (facingRight == true && fired == true){
-        while((gunBullet.x != zombie.x || gunBullet.x != 500) && fired == true ){
-            gunBullet.x += gunBulletSpeed * dt;
-        } 
-
-        fired = false;
-        gunBullet.image = "";
-    } else if (facingRight == false && fired == true){
-        while((gunBullet.x != zombie.x || gunBullet.x != -100) && fired == true ){
-            gunBullet.x -= gunBulletSpeed * dt;
-        } 
-
-        fired = false;
-        gunBullet.image = "";
-        
-    }*/
-
 
     //Zombie mechanisms
     if (hero.x < zombie.x) {
